@@ -110,9 +110,9 @@ def bpm_estimate(
     onset_env = librosa.onset.onset_strength(y=y_perc, sr=sr,hop_length=hop_length)
     
     bpm, beat = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length)
-    bpm0 = bpm.item()
 
-    X = extract_features(y_perc, sr, onset_env, bpm0, hop_length=512)
+
+    X = extract_features(y_perc, sr, onset_env, bpm, hop_length=512)
     probs = lgb_model.predict_proba([X])
     predict_label = np.argmax(probs)
     max_probs = np.max(probs, axis=1)
@@ -123,7 +123,7 @@ def bpm_estimate(
     else:
         final_ratio = 1.0
         
-    final_bpm = bpm0 * final_ratio
+    final_bpm = bpm * final_ratio
     return{
         "bpm_corrected": round(final_bpm)
     }
