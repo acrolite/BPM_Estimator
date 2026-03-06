@@ -109,8 +109,8 @@ def bpm_estimate(
     y_perc = librosa.effects.percussive(y)
     onset_env = librosa.onset.onset_strength(y=y_perc, sr=sr,hop_length=hop_length)
     
-    bpm, beat = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length)
-
+    tempo, beats = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length)
+    bpm = float(tempo)
 
     X = extract_features(y_perc, sr, onset_env, bpm, hop_length=512)
     probs = lgb_model.predict_proba([X])
