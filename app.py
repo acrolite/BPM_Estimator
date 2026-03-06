@@ -145,4 +145,4 @@ async def analyze(file: UploadFile = File(...)):
     data = await file.read()
     y, sr = librosa.load(io.BytesIO(data), sr=None, mono=True)
     result = bpm_estimate(y, sr, hop_length=512)
-    return result["bpm_corrected"]
+    return {"bpm_corrected": round(result["bpm_corrected"])}
