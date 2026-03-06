@@ -114,8 +114,8 @@ def bpm_estimate(
 
     X = extract_features(y_perc, sr, onset_env, bpm, hop_length=512)
     probs = lgb_model.predict_proba([X])
-    predict_label = np.argmax(probs)
-    max_probs = np.max(probs, axis=1)
+    predict_label = int(np.argmax(probs))
+    max_prob = float(np.max(probs))
     threshold =0.6
     ratio = {0: 0.5, 1: 0.66, 2: 1.0, 3: 1.5, 4: 2.0}
     if predict_label != 2 and max_probs >= threshold:
@@ -125,7 +125,7 @@ def bpm_estimate(
         
     final_bpm = bpm * final_ratio
     return{
-        "bpm_corrected": round(final_bpm)
+        "bpm_corrected": int(round(final_bpm))
     }
 
 # if __name__ == "__main__":
