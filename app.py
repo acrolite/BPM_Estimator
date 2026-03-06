@@ -87,7 +87,7 @@ def extract_features(y, sr, onset_env, bpm_raw, hop_length=512):
 
     tempogram = librosa.feature.tempogram(onset_envelope=onset_env, sr=sr, hop_length=hop_length, win_length=384)
     ltp_curve = np.mean(tempogram, axis=1)
-    n_dim = 65
+    n_dim = 60
     blocks = np.array_split(ltp_curve, n_dim)
     rpv = [np.max(b) if len(b) > 0 else 0 for b in blocks]
     features = [onset_hihat_mean, onset_snare_mean, onset_bass_mean, centroid_mean, zcr_mean, onset_density, f1, f2, f3, A1, A2, A1_A2_ratio, P1_P2_ratio, Pulse_Clarity, ACF_Centroid, ACF_Spread]
