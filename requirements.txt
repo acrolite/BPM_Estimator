@@ -8,3 +8,4 @@ soundfile
 joblib
 lightgbm
 scikit-learn
+soundfile

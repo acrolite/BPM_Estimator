@@ -6,7 +6,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import lightgbm
-
+import soundfile as sf
 
 
 # web上で呼び出すための設定
@@ -150,6 +150,22 @@ def bpm_estimate(
 async def analyze(file: UploadFile = File(...)):
     data = await file.read()
     print(f"Debug: Backend received: {len(data)}bytes")
-    y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
-    result = bpm_estimate(y, sr, hop_length=512)
+    try:
+        data_stream = io.(data)
+        y, native_sr = sf.read(data_stream)
+        print(f"DEBUG: sf.read 成功! 形状={y.shape}, 元のSR={native_sr}")
+    except Exception as e:
+        print(f"DEBUG: sf.read 失敗: {str(e)}")
+
+        try:
+            print("DEBUG: librosaでの強制でコードを試みます")
+            y, native_sr = librosa.load(io.BytesIO(data), sr=22500)
+            print(f"DEBUG: librosa成功 長さ={len(y)}")
+        except Exception as e2:
+            print(f"DEBUG: すべてのでコードに失敗: {str(e2)}")
+            return {"bpm_corrected":0, "error": "decode_failure"}
+    if len(y) == 0:
+        return {"bpm_corrected":0, "error": "decoded_array_is_empty"}
+    # y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
+    result = bpm_estimate(y, native_sr, hop_length=512)
     return {"bpm_corrected": int(result["bpm_corrected"])}
