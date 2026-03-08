@@ -208,8 +208,16 @@
                 const endIndex = Math.floor(endTime * sampleRate);
 
                 const sliceData = merged.slice(startIndex, endIndex);
+
+                const maxSlice = sliceData.reduce((max, s) => Math.max(max, Math.abs(s)), 0);
+                console.log("DEBUG: スライス直後の最大振幅:", maxSlice);
+
                 const targetRate = 22050;
                 const resampleData = await resampleAudio(sliceData, sampleRate, targetRate);
+                
+                const maxResample = resampleData.reduce((max, s) => Math.max(max, Math.abs(s)), 0);
+                console.log("DEBUG: リサンプル後の最大振幅:", maxResample);
+                
                 const sliceWAVBlob = encodeWav(resampleData, targetRate);
 
                 // 送信
