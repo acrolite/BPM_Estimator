@@ -151,7 +151,7 @@ async def analyze(file: UploadFile = File(...)):
     data = await file.read()
     print(f"Debug: Backend received: {len(data)}bytes")
     try:
-        data_stream = io.(data)
+        data_stream = io.BytesIO(data)
         y, native_sr = sf.read(data_stream)
         print(f"DEBUG: sf.read 成功! 形状={y.shape}, 元のSR={native_sr}")
     except Exception as e:
