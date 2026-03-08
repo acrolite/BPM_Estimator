@@ -24,7 +24,7 @@ app.add_middleware(
 
 def extract_features(y, sr, onset_env, bpm_raw, hop_length=512):
     # 前処理(hpssとオンセット強度検出)
-
+    
     onset_hihat = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop_length, fmin=4000)
     onset_snare = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop_length, fmin=2000, fmax=5000)
     onset_bass = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop_length, fmax=200)
@@ -106,11 +106,16 @@ def bpm_estimate(
     hop_length: int = 512,
 )-> dict:
     
+    if len(y) == 0 or np.max(np.abs(y)) < 1e-6:
+        print("DEBUG: 入力音声が空です。")
+        return {"bpm_corrected": 0}
+
     y_perc = librosa.effects.percussive(y)
     onset_env = librosa.onset.onset_strength(y=y_perc, sr=sr,hop_length=hop_length)
     
     tempo, beats = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length)
     bpm = float(tempo)
+    print(f"DEBUG: librosa detect bpm: {bpm}")
 
     X = extract_features(y_perc, sr, onset_env, bpm, hop_length=512)
     probs = lgb_model.predict_proba([X])
@@ -124,6 +129,7 @@ def bpm_estimate(
         final_ratio = 1.0
         
     final_bpm = bpm * final_ratio
+    print(f"DEBUG: final_bpm: {final_bpm}")
     return{
         "bpm_corrected": int(round(final_bpm))
     }
@@ -145,4 +151,4 @@ async def analyze(file: UploadFile = File(...)):
     data = await file.read()
     y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
     result = bpm_estimate(y, sr, hop_length=512)
-    return {"bpm_corrected": round(result["bpm_corrected"])}
+    return {"bpm_corrected": int(result["bpm_corrected"])}
