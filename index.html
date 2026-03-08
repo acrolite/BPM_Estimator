@@ -75,22 +75,44 @@
                 wavesurfer.playPause()
             }
 
-            async function resampleAudio(float32Array, originalRate, targetRate) {
-                const targetLength = Math.round(float32Array.length * targetRate / originalRate);
-                const offlineCtx = new OfflineAudioContext(1, targetLength, targetRate);
-                const buffer = offlineCtx.createBuffer(1, float32Array.length, originalRate);
-                buffer.copyFromChannel(float32Array, 0);
+            // async function resampleAudio(float32Array, originalRate, targetRate) {
+            //     const targetLength = Math.round(float32Array.length * targetRate / originalRate);
+            //     const offlineCtx = new OfflineAudioContext(1, targetLength, targetRate);
+            //     const buffer = offlineCtx.createBuffer(1, float32Array.length, originalRate);
+            //     buffer.copyFromChannel(float32Array, 0);
 
-                const source = offlineCtx.createBufferSource();
-                source.buffer = buffer;
-                source.connect(offlineCtx.destination);
-                source.start(0);
+            //     const source = offlineCtx.createBufferSource();
+            //     source.buffer = buffer;
+            //     source.connect(offlineCtx.destination);
+            //     source.start(0);
 
-                const renderBuffer = await offlineCtx.startRendering();
-                return renderBuffer.getChannelData(0);
+            //     const renderBuffer = await offlineCtx.startRendering();
+            //     return renderBuffer.getChannelData(0);
             
                 
+            // }
+
+            function resampleAudio(float32Array, originalRate, targetRate) {
+                const ratio = originalRate / targetRate;
+                const targetLength = Math.round(float32Array.length / ratio);
+                const result = new Float32Array(targetLength);
+
+                for (let i = 0; i < targetLength; i++) {
+                    const center = i * ratio;
+                    const index = Math.floor(center);
+                    const fraction = center - index;
+
+                    if (index + 1 < float32Array.length) {
+                        // 隣接する2つのサンプルから補間して値を計算
+                        result[i] = float32Array[index] * (1 - fraction) + float32Array[index + 1] * fraction;
+                    } else {
+                        result[i] = float32Array[index] || 0;
+                    }
+                }
+                return result;
             }
+
+
 
 
             // WAV生成関数 float32をint16に変換
