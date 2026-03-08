@@ -132,7 +132,7 @@ def bpm_estimate(
     final_bpm = bpm * final_ratio
     print(f"DEBUG: final_bpm: {final_bpm}")
     return{
-        "bpm_corrected": int(round(float((final_bpm)))
+        "bpm_corrected": int(round(float(final_bpm)))
     }
 
 # if __name__ == "__main__":
