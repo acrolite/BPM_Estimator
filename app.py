@@ -22,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-def extract_features(y, sr=22050, onset_env, bpm_raw, hop_length=512):
+def extract_features(y, sr, onset_env, bpm_raw, hop_length=512):
     # 前処理(hpssとオンセット強度検出)
 
     onset_hihat = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop_length, fmin=4000)
@@ -61,7 +61,7 @@ def extract_features(y, sr=22050, onset_env, bpm_raw, hop_length=512):
     a_sum = np.sum(tg) + 1e-6
     
     # onset density        
-    duration = len(y) / sr
+    duration = max(len(y) / sr, 1e-6)
     onset_density = len(peaks) / duration
 
     # スペクトラルフラックス
@@ -81,7 +81,7 @@ def extract_features(y, sr=22050, onset_env, bpm_raw, hop_length=512):
     A2 = a2 / a_sum
     A1_A2_ratio = a1 / (a2 + 1e-6)
     P1_P2_ratio = p1 / (p2 + 1e-6)
-    Pulse_Clarity = a1 / np.mean(tg+1e-6)
+    Pulse_Clarity = a1 / (np.mean(tg) + 1e-6)
     ACF_Centroid = np.sum(np.arange(len(tg)) * tg) / a_sum
     ACF_Spread = np.std(tg)
 
@@ -143,6 +143,6 @@ def bpm_estimate(
 @app.post("/analyze")
 async def analyze(file: UploadFile = File(...)):
     data = await file.read()
-    y, sr = librosa.load(io.BytesIO(data), sr=None, mono=True)
+    y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
     result = bpm_estimate(y, sr, hop_length=512)
     return {"bpm_corrected": round(result["bpm_corrected"])}
