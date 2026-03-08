@@ -105,7 +105,8 @@ def bpm_estimate(
     sr: int,
     hop_length: int = 512,
 )-> dict:
-    
+    max_val = np.max(np.abs(y))
+    print(f"DEBUG: 実際に受け取った最大振幅: {max_val}")
     if len(y) == 0 or np.max(np.abs(y)) < 1e-6:
         print("DEBUG: 入力音声が空です。")
         return {"bpm_corrected": 0}
@@ -159,7 +160,7 @@ async def analyze(file: UploadFile = File(...)):
 
         try:
             print("DEBUG: librosaでの強制でコードを試みます")
-            y, native_sr = librosa.load(io.BytesIO(data), sr=22500)
+            y, native_sr = librosa.load(io.BytesIO(data), sr=22050)
             print(f"DEBUG: librosa成功 長さ={len(y)}")
         except Exception as e2:
             print(f"DEBUG: すべてのでコードに失敗: {str(e2)}")
