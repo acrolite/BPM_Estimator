@@ -215,7 +215,7 @@
                 // 送信
                 const fd = new FormData(); //ファイル送信用のフォームデータ
                 fd.append("file", sliceWAVBlob, "clipped_mic.wav"); //フィールド名file、ファイル名mic.wavとして送る
-
+                console.log("送信Blobサイズ:", sliceWAVBlob.size);
                 const res = await fetch("https://acrolite-bpm-estimator.hf.space/analyze", {
                     method: "POST",
                     body: fd
