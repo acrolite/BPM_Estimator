@@ -149,6 +149,7 @@ def bpm_estimate(
 @app.post("/analyze")
 async def analyze(file: UploadFile = File(...)):
     data = await file.read()
+    print(f"Debug: Backend received: {len(data)}bytes")
     y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
     result = bpm_estimate(y, sr, hop_length=512)
     return {"bpm_corrected": int(result["bpm_corrected"])}
