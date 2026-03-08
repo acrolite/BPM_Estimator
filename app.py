@@ -22,7 +22,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-def extract_features(y, sr, onset_env, bpm_raw, hop_length=512):
+def extract_features(y, sr=22050, onset_env, bpm_raw, hop_length=512):
     # 前処理(hpssとオンセット強度検出)
 
     onset_hihat = librosa.onset.onset_strength(y=y, sr=sr, hop_length=hop_length, fmin=4000)
@@ -81,7 +81,7 @@ def extract_features(y, sr, onset_env, bpm_raw, hop_length=512):
     A2 = a2 / a_sum
     A1_A2_ratio = a1 / (a2 + 1e-6)
     P1_P2_ratio = p1 / (p2 + 1e-6)
-    Pulse_Clarity = a1 / np.mean(tg)
+    Pulse_Clarity = a1 / np.mean(tg+1e-6)
     ACF_Centroid = np.sum(np.arange(len(tg)) * tg) / a_sum
     ACF_Spread = np.std(tg)
 
