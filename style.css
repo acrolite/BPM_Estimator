@@ -97,7 +97,7 @@ h3{
 
 #estimateBtn{
     background-color: #E15A28	;
-    border-radius:10%;
+    border-radius:6%;
     line-height: 20px;
     border: none;
     width:200px;
@@ -125,39 +125,59 @@ h3{
 
 }
 
+
+
 .result-container{
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: center;
-    gap: 24px;
-    margin-top: 40px;
+    align-items: flex-end;
+    gap: 60px;
+    margin: 40px 0;
 }
 
-.result-item{
+.bpm-main-box{
     text-align: center;
 }
 
-.result-item .label{
-    font-weight: 600px;
-    margin-bottom: 4px;
-}
-
-.result-main .label{
-    font-size: 24px;
-}
-
-.result-main .value{
-    font-size: 88px;
-}
-
-
-.result-sub .label{
-    font-size: 14px;
+.bpm-label-main{
+    font-size: 4rem;
+    font-weight: bold;
     color: #666;
+    margin-bottom: 8px;
 }
 
-.result-sub .value{
-    font-size: 32px;
-    color: #444
+.bpm-value-main{
+    font-size: 8rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+
+.bpm-side-box{
+
+    text-align: center;
+    color: #777;
+    padding-bottom: 5px;
+}
+
+.bpm-label{
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+    background-color: #eee;
+    padding: 2px 8px;
+    border-radius: 4px; 
+
+}
+
+.bpm-value{
+    font-size: 5rem;
+    font-weight: 600;
+}
+
+
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    -webkit-font-smoothing: antialiased; /* 文字の輪郭を滑らかにする（スマホ・Mac用） */
+    -moz-osx-font-smoothing: grayscale;
 }

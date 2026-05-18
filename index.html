@@ -2,23 +2,42 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="style.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
         <title>Bpm Measurement</title>
         <meta name="viewport" content="width=devise-width, initial-scale=1.0">
         <meta name="description" content="web上で演奏のBPMを測定できるwebアプリです。">
         <meta name="robots" content="noindex, nofoloow">
         <meta name="theme-color" content="#111827">
+        <meta property="og:title" content="BPM Estimator - 高精度BPM測定ツール">
+        <meta property="og:description" content="機械学習（LightGBM）を用いてオクターブエラーを補正した、BPM測定アプリ。">
+        <meta property="og:url" content="https://www.bpmestimator.com">
+        <meta property="og:image" content="https://www.bpmestimator.com/assets/og-image.png">
+3. Google Search Console への登録準備
     </head>
 
     <body>
         <h1>BPM Estimator</h1>
         <h3>web上で録音し、BPMを測定できるWebアプリです</h3>
         <div class="result-container">
-            <div class="result-item result-main">
-                <div class="label">BPM</div>
-                <div id="bpm" class="value">-</div>
+            <div class="bpm-side-box">
+                <div class = "bpm-label">x1/2</div>
+                <div id="bpm_x05" class="bpm-value">-</div>
+            </div>
+
+            <div class="bpm-main-box">
+                <div class="bpm-label-main">BPM</div>
+                <div id="bpm" class="bpm-value-main">-</div>
+            </div>
+
+            <div class="bpm-side-box">
+                <div class = "bpm-label">x2</div>
+                <div id="bpm_x2" class="bpm-value">-</div>
             </div>
 
         </div>
+
         
         <div class="button-container">
             <button id="start">Start</button>
@@ -28,7 +47,8 @@
         <div id="waveform"></div>
         <div class="controls-container">
             <button id="playBtn">▶/⏸</button>
-            <button id="estimateBtn">測定</button>
+            <button id="estimateBtn">測定
+            </button>
         </div>
         
         <div class="operation-instructions">
@@ -75,22 +95,6 @@
                 wavesurfer.playPause()
             }
 
-            // async function resampleAudio(float32Array, originalRate, targetRate) {
-            //     const targetLength = Math.round(float32Array.length * targetRate / originalRate);
-            //     const offlineCtx = new OfflineAudioContext(1, targetLength, targetRate);
-            //     const buffer = offlineCtx.createBuffer(1, float32Array.length, originalRate);
-            //     buffer.copyFromChannel(float32Array, 0);
-
-            //     const source = offlineCtx.createBufferSource();
-            //     source.buffer = buffer;
-            //     source.connect(offlineCtx.destination);
-            //     source.start(0);
-
-            //     const renderBuffer = await offlineCtx.startRendering();
-            //     return renderBuffer.getChannelData(0);
-            
-                
-            // }
 
             function resampleAudio(float32Array, originalRate, targetRate) {
                 const ratio = originalRate / targetRate;
@@ -111,8 +115,6 @@
                 }
                 return result;
             }
-
-
 
 
             // WAV生成関数 float32をint16に変換
@@ -252,7 +254,19 @@
                 });
                 const json = await res.json();
                 // json.bpmがあれば表示
-                document.getElementById("bpm").textContent = (json.bpm_corrected ?? "-");
+                const rawBpm = Number(json.bpm_corrected);
+                if (isNaN(rawBpm) || rawBpm <=0){
+                    document.getElementById("bpm").textContent = "-";
+                    document.getElementById("bpm_x2 ").textContent = "-";
+                    document.getElementById("bpm_x05").textContent ="-";
+                }else {
+                    const bpm_original = Math.round(rawBpm);
+                    const bpm_x2 = Math.round(rawBpm * 2);
+                    const bpm_x05 = Math.round(rawBpm / 2);
+                    document.getElementById("bpm").textContent = bpm_original;                
+                    document.getElementById("bpm_x2").textContent = bpm_x2;
+                    document.getElementById("bpm_x05").textContent = bpm_x05;
+                }
                 
                 document.getElementById("start").disabled = false; //次の録音ができるように録音開始を有効化
 
