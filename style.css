@@ -252,10 +252,27 @@ h3{
 
 @media screen and (max-width: 360px){
     .result-container{
+        display: flex;
+        flex-direction: row ;
+        flex-wrap: nowrap;
+        width: 100px;
 
         gap: 4px;
     }
 
+    .bpm-side-box{
+        flex: 1 1 0%;
+        width: auto;
+        min-width: 0;
+        text-align: center;
+    }
+
+
+    .bpm-main-box{
+        flex: 1.2 1 0%;
+        min-width: 0;
+        text-align: center;
+    }
     .bpm-label-main{
         font-size: 1.5rem;
         font-weight: bold;
@@ -270,14 +287,18 @@ h3{
     }
     
     .bpm-label{
+
+        display: inline-block;
         font-size:0.8rem;
         font-weight: 400;
-        margin-bottom: 5px;
+        /* margin-bottom: 5px;
         margin-left: 4px;
-        margin-right:4px;
+        margin-right:4px; */
+        padding: 2px 4px !important;
         background-color: #eee;
         padding: 2px 2px;
         border-radius: 4px; 
+        white-space: nowrap;
 
     }
 
