@@ -18,7 +18,7 @@
 
     <body>
         <h1>BPM Estimator</h1>
-        <h3>web上で録音し、BPMを測定できるWebアプリです</h3>
+        <h3>web上で録音した音源のBPMを測定できるWebアプリです。</h3>
         <div class="result-container">
             <div class="bpm-side-box">
                 <div class = "bpm-label">x1/2</div>
@@ -39,23 +39,28 @@
 
         
         <div class="button-container">
-            <button id="start">Start</button>
-            <button id="stop">Stop</button>
+            <button id="record_button" class="start-style">Start</button>
+            <!-- <button id="stop">Stop</button> -->
         </div>
         
-        <div id="waveform"></div>
-        <div class="controls-container">
-            <button id="playBtn">▶/⏸</button>
-            <button id="estimateBtn">測定
+        <div class="audio-player-container">
+            <button id="playBtn" class="player-icon-only">▶</button>
+
+            <div id="waveform"></div>
+              
+        </div>
+        
+        <div class="controls-container">           
+            <button id="estimateBtn">BPM 測定
             </button>
         </div>
-        
+
         <div class="operation-instructions">
             <h3="instruction-title">操作説明</h3>
             <ol class="instruction-list">
                 <li>「Start」ボタンを押し、ブラウザのマイクの使用を許可する。</li>
                 <li>音源や演奏を15秒以上流し、「Stop」ボタンを押す。</li>
-                <li>BPMを測定する範囲を選択し、「測定」ボタンを押す。</li>
+                <li>BPMを測定する範囲を選択し、「BPM 測定」ボタンを押す。</li>
             </ol>
         </div>
 
@@ -89,10 +94,25 @@
 
 
 
+            const playButton = document.getElementById('playBtn');
 
-            document.getElementById("playBtn").onclick = async () => {
-                wavesurfer.playPause()
-            }
+            playButton.addEventListener('click', () =>{
+                
+          
+                wavesurfer.playPause();
+                if (wavesurfer.isPlaying()){
+                    playButton.textContent = '⏸';
+                    isPlaying = true;
+                }
+                else{
+                    playButton.textContent = '▶';
+                }               
+            });
+
+            wavesurfer.on('finish',() => {
+                playButton.textContent = '▶';
+                isPlaying = false;
+            });
 
 
             function resampleAudio(float32Array, originalRate, targetRate) {
@@ -150,64 +170,108 @@
             }
 
 
-
             // startボタンが押されたときに実行する非同期関数を設定
-            document.getElementById("start").onclick = async () => {
-                console.log("[start] clicked");
-                chunks = [];
-                total = 0;
-                merged = null;
-                wavBlob = null;
-                wavesurfer.empty()
-                mediaStream = await navigator.mediaDevices.getUserMedia({audio: true}); //マイク使用許可を求め、音声ストリームを取得
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();  //AudioContext;ブラウザ内で音声を処理するためのワークスペース
-                sampleRate = audioCtx.sampleRate; //サンプルレートを取得し保存
+            const recordButton = document.getElementById('record_button');
+            let isRecording = false;
+            let localStream = null;
+            recordButton.addEventListener('click', async () => {
+                if (!isRecording){
+                    if (localStream === null){
+                        localStream = await navigator.mediaDevices.getUserMedia({audio: true}); //マイク使用許可を求め、音声ストリームを取得
 
-                source = audioCtx.createMediaStreamSource(mediaStream); //マイクのMediaStreamをAudioContextのノードとして取り込む。
-                processor = audioCtx.createScriptProcessor(4096, 1, 1); //ScriptProcessorNode: jsで音声処理をできるようにするためのノードを作成
-                processor.onaudioprocess = (e) => {
-                    const input = e.inputBuffer.getChannelData(0); //AudioContextが音声バッファを処理したらJSに渡す
-                    chunks.push(new Float32Array(input)); //chunksに音を貯蓄していく
-                };
+                    
+                    }
 
-                source.connect(processor); //マイク入力をprocessorへ接続
-                processor.connect(audioCtx.destination); //processorをスピーカーに接続
+                    console.log("[start] clicked");
+                    chunks = [];
+                    total = 0;
+                    merged = null;
+                    wavBlob = null;
+                    wavesurfer.empty()
+                    
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();  //AudioContext;ブラウザ内で音声を処理するためのワークスペース
+                    sampleRate = audioCtx.sampleRate; //サンプルレートを取得し保存
 
-                document.getElementById("start").disabled = true; //録音中に録音開始を押せないようにする
-                document.getElementById("stop").disabled = false; //録音後にstopを押せるようにする
+                    source = audioCtx.createMediaStreamSource(localStream); //マイクのMediaStreamをAudioContextのノードとして取り込む。
+                    processor = audioCtx.createScriptProcessor(4096, 1, 1); //ScriptProcessorNode: jsで音声処理をできるようにするためのノードを作成
+                    processor.onaudioprocess = (e) => {
+                        const input = e.inputBuffer.getChannelData(0); //AudioContextが音声バッファを処理したらJSに渡す
+                        chunks.push(new Float32Array(input)); //chunksに音を貯蓄していく
+                    };
 
-            };
+                    source.connect(processor); //マイク入力をprocessorへ接続
+                    processor.connect(audioCtx.destination); //processorをスピーカーに接続
+                    
+                    recordButton.textContent = 'Stop';
+                    isRecording = true;
+                    recordButton.classList.remove('start-style');
+                    recordButton.classList.add('stop-style')
+                }else{
+                    console.log("[stop] clicked")
 
-            //stopボタンが押されたときに実行
-            document.getElementById("stop").onclick = async () =>{
-                console.log("[stop] clicked")
-                document.getElementById("stop").disabled = true;
 
-                // 停止処理
-                if (processor) processor.disconnect();
-                if (source) source.disconnect();
-                if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
-                if (audioCtx) await audioCtx.close();
+                    // 停止処理
+                    if (processor) processor.disconnect();
+                    if (source) source.disconnect();
+                    if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+                    if (audioCtx) await audioCtx.close();
 
-                // 音声の結合
-                total = chunks.reduce((acc, a) => acc + a.length, 0); //チャンク内のデータを順次足していく数えるだけ
-                merged = new Float32Array(total); //チャンク内の合計の配列を確保
-                let pos = 0; //書き込み開始位置
-                for (const c of chunks) {merged.set(c, pos); pos += c.length;} //書き込み
+                    // 音声の結合
+                    total = chunks.reduce((acc, a) => acc + a.length, 0); //チャンク内のデータを順次足していく数えるだけ
+                    merged = new Float32Array(total); //チャンク内の合計の配列を確保
+                    let pos = 0; //書き込み開始位置
+                    for (const c of chunks) {merged.set(c, pos); pos += c.length;} //書き込み
 
-                // 録音データ確認用
-                console.log("[stop] chunks.length=", chunks.length);
-                console.log("[stop] total samples=", total);
+                    // 録音データ確認用
+                    console.log("[stop] chunks.length=", chunks.length);
+                    console.log("[stop] total samples=", total);
 
-                // wav化
-                wavBlob = encodeWav(merged, sampleRate); //録音したFloat32をwav(16PCM)Blobに変換
-                console.log("[stop] wacBlob.size=", wavBlob.size, "type=", wavBlob.type);
+                    // wav化
+                    wavBlob = encodeWav(merged, sampleRate); //録音したFloat32をwav(16PCM)Blobに変換
+                    console.log("[stop] wacBlob.size=", wavBlob.size, "type=", wavBlob.type);
 
-                wavesurfer.loadBlob(wavBlob)
+                    wavesurfer.loadBlob(wavBlob)
+                    recordButton.textContent = 'Start';
+                    recordButton.classList.remove('stop-style');
+                    recordButton.classList.add('start-style');
+                    isRecording  = false;
+
+                }
+
+            });
+
+
                 
-                
 
-            };
+
+            // //stopボタンが押されたときに実行
+            // document.getElementById("stop").onclick = async () =>{
+            //     console.log("[stop] clicked")
+            //     document.getElementById("stop").disabled = true;
+
+            //     // 停止処理
+            //     if (processor) processor.disconnect();
+            //     if (source) source.disconnect();
+            //     if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+            //     if (audioCtx) await audioCtx.close();
+
+            //     // 音声の結合
+            //     total = chunks.reduce((acc, a) => acc + a.length, 0); //チャンク内のデータを順次足していく数えるだけ
+            //     merged = new Float32Array(total); //チャンク内の合計の配列を確保
+            //     let pos = 0; //書き込み開始位置
+            //     for (const c of chunks) {merged.set(c, pos); pos += c.length;} //書き込み
+
+            //     // 録音データ確認用
+            //     console.log("[stop] chunks.length=", chunks.length);
+            //     console.log("[stop] total samples=", total);
+
+            //     // wav化
+            //     wavBlob = encodeWav(merged, sampleRate); //録音したFloat32をwav(16PCM)Blobに変換
+            //     console.log("[stop] wacBlob.size=", wavBlob.size, "type=", wavBlob.type);
+
+            //     wavesurfer.loadBlob(wavBlob)
+                
+            // };
 
             document.getElementById("estimateBtn").onclick = async () =>{
                 if (wavBlob === null) return; 
@@ -219,6 +283,7 @@
                 }
 
                 document.getElementById("bpm").textContent = "測定中";
+                
 
 
                 
@@ -267,7 +332,7 @@
                     document.getElementById("bpm_x05").textContent = bpm_x05;
                 }
                 
-                document.getElementById("start").disabled = false; //次の録音ができるように録音開始を有効化
+                recordButton.disabled = false; //次の録音ができるように録音開始を有効化
 
             }
 

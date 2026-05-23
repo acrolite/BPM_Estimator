@@ -35,27 +35,49 @@ h3{
     margin-top: 40px;
 }
 
-#start{
-    background-color: #40BA8D;
+
+#record_button {
     border-radius: 50%;
     line-height: 100px;
     border: none;
     width: 100px;
     height: 100px;
     padding: 0;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
     color:aliceblue;
-    font-size: 20px;
-
+    font-size: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
 }
 
-#start:active{
+
+#record_button {
+    filter: brightness(1.05);
+}
+
+
+.start-style{
+    background-color: #40BA8D;
+}
+
+.stop-style{
+    background-color: #D93A49;
+}
+
+
+
+#record_button:active{
     -webkit-transform: translate(0, 3px);
     transform: translate(0, 3px);
     -webkit-box-shadow: 0 2px 0 #40BA8D;
-    box-shadow: 0 2px 0 #40BA8D;
+    box-shadow: 0 2px ;
 }
 
-#stop{
+/* #stop{
     background-color: 	#D93A49;
     border-radius: 50%;
     line-height: 100px;
@@ -73,46 +95,63 @@ h3{
     transform: translate(0, 3px);
     -webkit-box-shadow: 0 2px 0 #D93A49;
     box-shadow: 0 2px 0 #D93A49;
+} */ 
+
+#playBtn{
+    /* background-color: #1A4472	; */
+
+    line-height: 50px;
+    border: none;
+    width:60px;
+    height: 60px;
+    padding: 5px;
+    color: 	#1166AA;
+    font-size:30px;
+    cursor: pointer;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+
 }
 
 #playBtn{
-    background-color: #1A4472	;
-    border-radius:50%;
-    line-height: 50px;
-    border: none;
-    width:80px;
-    height: 80px;
-    padding: 0;
-    color: 	aliceblue;
-    font-size:20px;
-
+    opacity: 0.6;
 }
 
-#playBtn:active{
+/* #playBtn:active{
     -webkit-transform: translate(0, 3px);
     transform: translate(0, 3px);
     -webkit-box-shadow: 0 2px 0 #1A4472;
     box-shadow: 0 2px 0 #1A4472;
-}
+} */
 
 #estimateBtn{
-    background-color: #E15A28	;
-    border-radius:6%;
+    background: linear-gradient(135deg, #FF943D 0%, #ED6C11 100%)	;
+    border-radius:40px;
     line-height: 20px;
     border: none;
-    width:200px;
-    height: 100px;
+    width:400px;
+    height: 80px;
     padding: 0;
     color: 	aliceblue;
     font-size:40px;
-
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 16px rgba(237, 108, 17, 0.3);
+    cursor: pointer;
+    display: block;
+    margin: 24px auto;
+    transition: all 0.2s ease;
 }
 
 #estimateBtn:active{
     -webkit-transform: translate(0, 3px);
     transform: translate(0, 3px);
-    -webkit-box-shadow: 0 2px 0 #E15A28;
-    box-shadow: 0 2px 0 #E15A28;
+    -webkit-box-shadow: 0 2px 0 #ED6C11;
+    box-shadow: 0 2px 0 #ED6C11;
 }
 
 .controls-container{
@@ -125,18 +164,83 @@ h3{
 
 }
 
+#waveform {
+    width: 100%;
+    height: 60px;
+    margin-top: 20px;
+    margin-bottom: 40px;
 
+}
 
 .result-container{
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    /* align-items: flex-end; */
+    flex-direction: row;
+    align-items: center;
     gap: 60px;
     margin: 40px 0;
+    width: 100%;
 }
 
+.audio-player-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+
+}
+
+.player-icon-only {
+    background: none;
+    border: none;
+    font-size: 24px;
+    /* color: ; */
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 20px;
+    height: 60px;
+}
+
+@media screen and (max-width: 480px){
+    .result-container{
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .bpm-label-main{
+        font-size: 2rem;
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 4px;
+    }
+
+    .bpm-value-main{
+        font-size: 4rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+    
+    .bpm-label{
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+        background-color: #eee;
+        padding: 2px 8px;
+        border-radius: 4px; 
+
+    }
+
+    .bpm-value{
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+
+}
 .bpm-main-box{
     text-align: center;
+
 }
 
 .bpm-label-main{
@@ -144,12 +248,14 @@ h3{
     font-weight: bold;
     color: #666;
     margin-bottom: 8px;
+
 }
 
 .bpm-value-main{
     font-size: 8rem;
     font-weight: bold;
     line-height: 1;
+
 }
 
 
@@ -158,6 +264,10 @@ h3{
     text-align: center;
     color: #777;
     padding-bottom: 5px;
+
+    justify-content: center;
+    align-items: center;
+    width: 120px;
 }
 
 .bpm-label{
