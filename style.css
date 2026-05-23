@@ -202,10 +202,10 @@ h3{
     height: 60px;
 }
 
-@media screen and (max-width: 480px){
+@media screen and (max-width: 390px){
     .result-container{
 
-        gap: 5px;
+        gap: 4px;
     }
 
     .bpm-label-main{
@@ -225,10 +225,10 @@ h3{
         font-size:0.5rem;
         font-weight: 400;
         margin-bottom: 5px;
-        margin-left: 8px;
-        margin-right:8px;
+        margin-left: 4px;
+        margin-right:4px;
         background-color: #eee;
-        padding: 2px 0px;
+        padding: 2px 2px;
         border-radius: 4px; 
 
     }
