@@ -252,25 +252,29 @@ h3{
 
 @media screen and (max-width: 480px){
     .result-container {
-        gap: 0 !important; /* スマホ時は隙間を完全にゼロにする */
+  
+        gap: 0 !important; 
     }
     .bpm-label {
-        font-size: 0.9rem !important;  /* スマホ用にガッツリ小さく */
-        padding: 2px 6px !important;   /* グレー背景もスリムに */
+
+        width: 60%;
+        font-size: 1.5rem !important;  
+        padding: 2px 4px !important;  
+        margin-left: 20px !important;
     }
     .bpm-value {
-        font-size: 1.8rem !important;
+        font-size:1.5rem !important;
     }
     .bpm-label-main {
-        font-size: 1.3rem !important;
+        font-size: 3rem !important;
     }
     .bpm-value-main {
-        font-size: 3.2rem !important;  /* ドデカ数字を実機サイズに縮小 */
+        font-size: 3rem !important;  
     }
 }
 
 body {
     font-family: 'Noto Sans JP', sans-serif;
-    -webkit-font-smoothing: antialiased; /* 文字の輪郭を滑らかにする（スマホ・Mac用） */
+    -webkit-font-smoothing: antialiased; 
     -moz-osx-font-smoothing: grayscale;
 }
