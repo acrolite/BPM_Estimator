@@ -202,45 +202,7 @@ h3{
     height: 60px;
 }
 
-@media screen and (max-width: 360px){
-    .result-container{
 
-        gap: 4px;
-    }
-
-    .bpm-label-main{
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #666;
-        margin-bottom: 4px;
-    }
-
-    .bpm-value-main{
-        font-size: 2rem;
-        font-weight: bold;
-        line-height: 1;
-    }
-    
-    .bpm-label{
-        font-size:0.8rem;
-        font-weight: 400;
-        margin-bottom: 5px;
-        margin-left: 4px;
-        margin-right:4px;
-        background-color: #eee;
-        padding: 2px 2px;
-        border-radius: 4px; 
-
-    }
-
-    .bpm-value{
-        font-size: 1rem;
-        font-weight: 600;
-    }
-
-
-
-}
 .bpm-main-box{
     text-align: center;
 
@@ -288,6 +250,45 @@ h3{
     font-weight: 600;
 }
 
+@media screen and (max-width: 360px){
+    .result-container{
+
+        gap: 4px;
+    }
+
+    .bpm-label-main{
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #666;
+        margin-bottom: 4px;
+    }
+
+    .bpm-value-main{
+        font-size: 2rem;
+        font-weight: bold;
+        line-height: 1;
+    }
+    
+    .bpm-label{
+        font-size:0.8rem;
+        font-weight: 400;
+        margin-bottom: 5px;
+        margin-left: 4px;
+        margin-right:4px;
+        background-color: #eee;
+        padding: 2px 2px;
+        border-radius: 4px; 
+
+    }
+
+    .bpm-value{
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+
+
+}
 
 body {
     font-family: 'Noto Sans JP', sans-serif;
