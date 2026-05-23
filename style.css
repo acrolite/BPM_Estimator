@@ -251,64 +251,53 @@ h3{
 }
 
 @media screen and (max-width: 360px){
-    .result-container{
-        display: flex;
-        flex-direction: row ;
-        flex-wrap: nowrap;
-        width: 100px;
-
-        gap: 4px;
+    .result-container {
+        display: flex !important;
+        flex-direction: row !important; /* 💡何が何でも横並び */
+        flex-wrap: nowrap !important;    /* 💡絶対に折り返しを禁止する */
+        gap: 0 !important;              /* 💡部屋同士の無駄な隙間をゼロに */
+        width: 100% !important;
+        padding: 0 !important;
     }
 
-    .bpm-side-box{
-        flex: 1 1 0%;
-        width: auto;
-        min-width: 0;
-        text-align: center;
+    /* 2. 左右の部屋（x1/2, x2）：横幅を自動伸縮（flex: 1）にする */
+    .bpm-side-box {
+        flex: 1 1 0% !important;        /* 💡左右で完全に同じ幅をキープ */
+        width: auto !important;          /* 固定幅を解除 */
+        min-width: 0 !important;         /* 中身がはみ出しても部屋を広げない */
+        text-align: center !important;
     }
 
-
-    .bpm-main-box{
-        flex: 1.2 1 0%;
-        min-width: 0;
-        text-align: center;
-    }
-    .bpm-label-main{
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #666;
-        margin-bottom: 4px;
+    /* 3. 真ん中の部屋（BPM）：左右よりほんの少しだけ広く */
+    .bpm-main-box {
+        flex: 1.2 1 0% !important;
+        min-width: 0 !important;
+        text-align: center !important;
     }
 
-    .bpm-value-main{
-        font-size: 2rem;
-        font-weight: bold;
-        line-height: 1;
-    }
-    
-    .bpm-label{
-
-        display: inline-block;
-        font-size:0.8rem;
-        font-weight: 400;
-        /* margin-bottom: 5px;
-        margin-left: 4px;
-        margin-right:4px; */
-        padding: 2px 4px !important;
-        background-color: #eee;
-        padding: 2px 2px;
-        border-radius: 4px; 
-        white-space: nowrap;
-
+    /* 4. グレーのラベル：文字サイズを0.85remに落とし、左右の余白を最小(4px)にする */
+    .bpm-label {
+        display: inline-block !important;
+        font-size: 0.85rem !important;   /* 💡1未満のサイズを適用 */
+        padding: 2px 4px !important;     /* 💡左右の余白を極限までスリムに */
+        background-color: #eee !important;
+        border-radius: 4px !important;
+        white-space: nowrap !important;  /* ラベル内での改行を禁止 */
     }
 
-    .bpm-value{
-        font-size: 1rem;
-        font-weight: 600;
+    /* 5. 数字：画面に収まるようにスケールダウン */
+    .bpm-value {
+        font-size: 1.8rem !important;    /* 劇的に小さくして確実に収める */
     }
 
+    .bpm-label-main {
+        font-size: 1.2rem !important;
+    }
 
-
+    .bpm-value-main {
+        font-size: 3.2rem !important;    /* 中央のドデカい数字も一回りスリムに */
+        line-height: 1 !important;
+    }
 }
 
 body {
