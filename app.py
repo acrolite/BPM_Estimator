@@ -28,7 +28,7 @@ app.add_middleware(
 def bpm_estimate(
     y: np.ndarray,
     sr: int,
-    hop_length: int = 128,
+    hop_length: int = 256,
 )-> dict:
     max_val = np.max(np.abs(y))
     print(f"DEBUG: 実際に受け取った最大振幅: {max_val}")
@@ -76,6 +76,6 @@ async def analyze(file: UploadFile = File(...)):
     if len(y) == 0:
         return {"bpm_corrected":0, "error": "decoded_array_is_empty"}
 
-    result = bpm_estimate(y, native_sr, hop_length=128)
+    result = bpm_estimate(y, native_sr, hop_length=256)
     return {"bpm_corrected": int(result["bpm_corrected"])}
 
