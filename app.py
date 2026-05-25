@@ -61,6 +61,11 @@ async def analyze(file: UploadFile = File(...)):
         data_stream = io.BytesIO(data)
         y, native_sr = sf.read(data_stream)
         print(f"DEBUG: sf.read 成功! 形状={y.shape}, 元のSR={native_sr}")
+        bpm_a = bpm_estimate(y, native_sr, hop_length=512)
+        print(f"通常の結果{bpm_a}")
+        bpm_b = bpm_estimate(y, 48000, hop_length=512)
+        print(f"sr変更の結果{bpm_b}")
+
     except Exception as e:
         print(f"DEBUG: sf.read 失敗: {str(e)}")
 
@@ -76,3 +81,5 @@ async def analyze(file: UploadFile = File(...)):
     # y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
     result = bpm_estimate(y, native_sr, hop_length=512)
     return {"bpm_corrected": int(result["bpm_corrected"])}
+
+y, native_sr = sf.read(data_stream)

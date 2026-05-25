@@ -77,28 +77,8 @@ h3{
     box-shadow: 0 2px ;
 }
 
-/* #stop{
-    background-color: 	#D93A49;
-    border-radius: 50%;
-    line-height: 100px;
-    border: none;
-    width: 100px;
-    height: 100px;
-    padding: 0;
-    color: aliceblue;
-    font-size: 20px;
-
-}
-
-#stop:active{
-    -webkit-transform: translate(0, 3px);
-    transform: translate(0, 3px);
-    -webkit-box-shadow: 0 2px 0 #D93A49;
-    box-shadow: 0 2px 0 #D93A49;
-} */ 
 
 #playBtn{
-    /* background-color: #1A4472	; */
 
     line-height: 50px;
     border: none;
@@ -120,13 +100,6 @@ h3{
 #playBtn{
     opacity: 0.6;
 }
-
-/* #playBtn:active{
-    -webkit-transform: translate(0, 3px);
-    transform: translate(0, 3px);
-    -webkit-box-shadow: 0 2px 0 #1A4472;
-    box-shadow: 0 2px 0 #1A4472;
-} */
 
 #estimateBtn{
     background: linear-gradient(135deg, #FF943D 0%, #ED6C11 100%)	;
@@ -220,6 +193,7 @@ h3{
     font-size: 8rem;
     font-weight: bold;
     line-height: 1;
+    white-space: nowrap !important;
 
 }
 

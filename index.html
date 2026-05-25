@@ -40,7 +40,7 @@
         
         <div class="button-container">
             <button id="record_button" class="start-style">Start</button>
-            <!-- <button id="stop">Stop</button> -->
+
         </div>
         
         <div class="audio-player-container">
@@ -241,37 +241,7 @@
             });
 
 
-                
 
-
-            // //stopボタンが押されたときに実行
-            // document.getElementById("stop").onclick = async () =>{
-            //     console.log("[stop] clicked")
-            //     document.getElementById("stop").disabled = true;
-
-            //     // 停止処理
-            //     if (processor) processor.disconnect();
-            //     if (source) source.disconnect();
-            //     if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
-            //     if (audioCtx) await audioCtx.close();
-
-            //     // 音声の結合
-            //     total = chunks.reduce((acc, a) => acc + a.length, 0); //チャンク内のデータを順次足していく数えるだけ
-            //     merged = new Float32Array(total); //チャンク内の合計の配列を確保
-            //     let pos = 0; //書き込み開始位置
-            //     for (const c of chunks) {merged.set(c, pos); pos += c.length;} //書き込み
-
-            //     // 録音データ確認用
-            //     console.log("[stop] chunks.length=", chunks.length);
-            //     console.log("[stop] total samples=", total);
-
-            //     // wav化
-            //     wavBlob = encodeWav(merged, sampleRate); //録音したFloat32をwav(16PCM)Blobに変換
-            //     console.log("[stop] wacBlob.size=", wavBlob.size, "type=", wavBlob.type);
-
-            //     wavesurfer.loadBlob(wavBlob)
-                
-            // };
 
             document.getElementById("estimateBtn").onclick = async () =>{
                 if (wavBlob === null) return; 
