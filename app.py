@@ -40,7 +40,7 @@ def bpm_estimate(
     y_kick = librosa.effects.preemphasis(y_perc)
     onset_env = librosa.onset.onset_strength(y=y_kick, sr=sr,hop_length=hop_length, fmax=5000)
     
-    tempo, beats = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length, ac_size=15.0, start_bpm=120, max_temp=240, min_tempo=50)
+    tempo, beats = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length, prior=15.0, start_bpm=120, max_temp=240, min_tempo=50)
     bpm = float(tempo.item())
     print(f"DEBUG: librosa detect bpm: {bpm}")
 
