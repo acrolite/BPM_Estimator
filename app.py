@@ -82,4 +82,3 @@ async def analyze(file: UploadFile = File(...)):
     result = bpm_estimate(y, native_sr, hop_length=512)
     return {"bpm_corrected": int(result["bpm_corrected"])}
 
-y, native_sr = sf.read(data_stream)
