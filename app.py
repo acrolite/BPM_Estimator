@@ -28,7 +28,7 @@ app.add_middleware(
 def bpm_estimate(
     y: np.ndarray,
     sr: int,
-    hop_length: int = 512,
+    hop_length: int = 128,
 )-> dict:
     max_val = np.max(np.abs(y))
     print(f"DEBUG: 実際に受け取った最大振幅: {max_val}")
@@ -40,7 +40,7 @@ def bpm_estimate(
     y_kick = librosa.effects.preemphasis(y_perc)
     onset_env = librosa.onset.onset_strength(y=y_kick, sr=sr,hop_length=hop_length, fmax=5000)
     
-    tempo, beats = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length)
+    tempo, beats = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, hop_length=hop_length, ac_size=15.0, start_bpm=120, max_temp=240, min_tempo=50)
     bpm = float(tempo.item())
     print(f"DEBUG: librosa detect bpm: {bpm}")
 
@@ -61,10 +61,7 @@ async def analyze(file: UploadFile = File(...)):
         data_stream = io.BytesIO(data)
         y, native_sr = sf.read(data_stream)
         print(f"DEBUG: sf.read 成功! 形状={y.shape}, 元のSR={native_sr}")
-        bpm_a = bpm_estimate(y, native_sr, hop_length=512)
-        print(f"通常の結果{bpm_a}")
-        bpm_b = bpm_estimate(y, 48000, hop_length=512)
-        print(f"sr変更の結果{bpm_b}")
+        
 
     except Exception as e:
         print(f"DEBUG: sf.read 失敗: {str(e)}")
@@ -78,7 +75,7 @@ async def analyze(file: UploadFile = File(...)):
             return {"bpm_corrected":0, "error": "decode_failure"}
     if len(y) == 0:
         return {"bpm_corrected":0, "error": "decoded_array_is_empty"}
-    # y, sr = librosa.load(io.BytesIO(data), sr=22050, mono=True)
-    result = bpm_estimate(y, native_sr, hop_length=512)
+
+    result = bpm_estimate(y, native_sr, hop_length=128)
     return {"bpm_corrected": int(result["bpm_corrected"])}
 
